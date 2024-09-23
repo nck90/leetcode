@@ -1,119 +1,78 @@
-class SegTree {
-    long sum;
-    int posMax;
-    int l, r;
-    SegTree left, right;
-
-    public SegTree(int l, int r) {
-        this.l = l;
-        this.r = r;
-    }
-}
-
 class BookMyShow {
-    private long m;
-    private long[] remain;
-    private SegTree root;
+    private int n, m;
+    private long[] seats;
+    private long[] maxTree;
+    private long[] sumTree;
 
     public BookMyShow(int n, int m) {
+        this.n = n;
         this.m = m;
-        this.remain = new long[n];
-        for (int i = 0; i < n; i++) {
-            remain[i] = m;
-        }
-        this.root = build(remain, 0, n - 1);
+        this.seats = new long[n];
+        this.maxTree = new long[4 * n];
+        this.sumTree = new long[4 * n];
+        for (int i = 0; i < n; i++) seats[i] = m;
+        build(0, 0, n - 1);
     }
 
-    private SegTree build(long[] remain, int l, int r) {
-        SegTree node = new SegTree(l, r);
-        if (l == r) {
-            node.sum = remain[l];
-            node.posMax = l;
-            return node;
-        }
-        int mid = (l + r) / 2;
-        node.left = build(remain, l, mid);
-        node.right = build(remain, mid + 1, r);
-        fix(node, remain);
-        return node;
-    }
-
-    private void fix(SegTree node, long[] remain) {
-        node.sum = node.left.sum + node.right.sum;
-        node.posMax = remain[node.left.posMax] >= remain[node.right.posMax] ? node.left.posMax : node.right.posMax;
-    }
-
-    private void update(SegTree node, long[] remain, int i) {
-        if (node.l == node.r) {
-            node.sum = remain[i];
-            return;
-        }
-        int mid = (node.l + node.r) / 2;
-        if (i <= mid) {
-            update(node.left, remain, i);
+    private void build(int node, int start, int end) {
+        if (start == end) {
+            maxTree[node] = seats[start];
+            sumTree[node] = seats[start];
         } else {
-            update(node.right, remain, i);
+            int mid = (start + end) / 2;
+            build(2 * node + 1, start, mid);
+            build(2 * node + 2, mid + 1, end);
+            maxTree[node] = Math.max(maxTree[2 * node + 1], maxTree[2 * node + 2]);
+            sumTree[node] = sumTree[2 * node + 1] + sumTree[2 * node + 2];
         }
-        fix(node, remain);
     }
 
-    private int getGather(SegTree node, long[] remain, int l, int r, int k) {
-        if (remain[node.posMax] < k) {
-            return -1;
+    private void update(int node, int start, int end, int idx, int value) {
+        if (start == end) {
+            seats[start] -= value;
+            maxTree[node] = seats[start];
+            sumTree[node] = seats[start];
+        } else {
+            int mid = (start + end) / 2;
+            if (idx <= mid) update(2 * node + 1, start, mid, idx, value);
+            else update(2 * node + 2, mid + 1, end, idx, value);
+            maxTree[node] = Math.max(maxTree[2 * node + 1], maxTree[2 * node + 2]);
+            sumTree[node] = sumTree[2 * node + 1] + sumTree[2 * node + 2];
         }
-        if (node.l == node.r) {
-            return node.posMax;
-        }
-        int mid = (node.l + node.r) / 2;
-        if (r <= mid) {
-            return getGather(node.left, remain, l, r, k);
-        }
-        if (l >= mid + 1) {
-            return getGather(node.right, remain, l, r, k);
-        }
-        int leftResult = getGather(node.left, remain, l, mid, k);
-        if (leftResult != -1) {
-            return leftResult;
-        }
-        return getGather(node.right, remain, mid + 1, r, k);
     }
 
-    private long getScatter(SegTree node, int l, int r) {
-        if (node.l == l && node.r == r) {
-            return node.sum;
-        }
-        int mid = (node.l + node.r) / 2;
-        if (r <= mid) {
-            return getScatter(node.left, l, r);
-        }
-        if (l >= mid + 1) {
-            return getScatter(node.right, l, r);
-        }
-        return getScatter(node.left, l, mid) + getScatter(node.right, mid + 1, r);
+    private int queryMax(int node, int start, int end, int maxRow, int k) {
+        if (start > maxRow || maxTree[node] < k) return -1;
+        if (start == end) return start;
+        int mid = (start + end) / 2;
+        int left = queryMax(2 * node + 1, start, mid, maxRow, k);
+        return left != -1 ? left : queryMax(2 * node + 2, mid + 1, end, maxRow, k);
+    }
+
+    private long querySum(int node, int start, int end, int l, int r) {
+        if (start > r || end < l) return 0;
+        if (start >= l && end <= r) return sumTree[node];
+        int mid = (start + end) / 2;
+        return querySum(2 * node + 1, start, mid, l, r) + querySum(2 * node + 2, mid + 1, end, l, r);
     }
 
     public int[] gather(int k, int maxRow) {
-        int i = getGather(this.root, this.remain, 0, maxRow, k);
-        if (i == -1) {
-            return new int[]{};
-        }
-        int[] res = new int[]{i, (int) (this.m - this.remain[i])};
-        this.remain[i] -= k;
-        update(this.root, this.remain, i);
-        return res;
+        int row = queryMax(0, 0, n - 1, maxRow, k);
+        if (row == -1) return new int[]{};
+        int startSeat = (int)(m - seats[row]);
+        update(0, 0, n - 1, row, k);
+        return new int[]{row, startSeat};
     }
 
     public boolean scatter(int k, int maxRow) {
-        long availableSeats = getScatter(this.root, 0, maxRow);
-        if (availableSeats < k) {
-            return false;
-        }
-        long remaining = k;
-        for (int i = 0; i <= maxRow && remaining > 0; i++) {
-            long allocatedSeats = Math.min(remaining, this.remain[i]);
-            this.remain[i] -= allocatedSeats;
-            remaining -= allocatedSeats;
-            update(this.root, this.remain, i);
+        long availableSeats = querySum(0, 0, n - 1, 0, maxRow);
+        if (availableSeats < k) return false;
+        for (int r = 0; r <= maxRow && k > 0; r++) {
+            if (seats[r] > 0) {
+                int seatsToAllocate = (int)Math.min(k, seats[r]);
+                update(0, 0, n - 1, r, seatsToAllocate);
+                k -= seatsToAllocate;
+            }
         }
         return true;
     }

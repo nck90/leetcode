@@ -1,38 +1,57 @@
 function recoverArray(nums: number[]): number[] {
-    nums.sort((a, b) => a - b);
     const n = nums.length / 2;
+    nums.sort((u, v) => (u < v ? -1 : 1));
+    const set: Set<number> = new Set(nums);
+
+    const mark: number[] = new Array(n * 2).fill(0);
     
-    for (let j = 1; j < nums.length; j++) {
-        const possibleK = (nums[j] - nums[0]) / 2;
+    for (let i = 1; i < n * 2; i++) {
+        let k = nums[i] - nums[0];
         
-        if (possibleK <= 0 || (nums[j] - nums[0]) % 2 !== 0) {
+        if (!set.has(nums[n * 2 - 1] - k)) {
+            continue;
+        }
+        if (k === 0) {
+            continue;
+        }
+        if (k % 2 !== 0) {
             continue;
         }
         
-        const countMap = new Map<number, number>();
-        for (let num of nums) {
-            countMap.set(num, (countMap.get(num) || 0) + 1);
+
+        for (let t = 0; t < n * 2; t++) {
+            mark[t] = 0;
         }
-        
-        const originalArray: number[] = [];
-        let valid = true;
-        
-        for (let i = 0; i < nums.length; i++) {
-            const x = nums[i];
-            if (!countMap.get(x)) continue;
-            
-            const y = x + 2 * possibleK;
-            if (!countMap.get(y)) {
-                valid = false;
-                break;
+        mark[0] = 1;
+        mark[i] = 2;
+
+        let pb = 0;
+        while (pb < n * 2 && mark[pb] !== 0) {
+            pb++;
+        }
+        mark[pb] = 1;
+
+        for (let t = 1; t < n * 2; t++) {
+            if (mark[t] !== 0) {
+                continue;
             }
-            
-            originalArray.push(x + possibleK);
-            countMap.set(x, countMap.get(x)! - 1);
-            countMap.set(y, countMap.get(y)! - 1);
+            if (nums[t] - nums[pb] === k) {
+                mark[t] = 2;
+                while (pb < n * 2 && mark[pb] !== 0) {
+                    pb++;
+                }
+                mark[pb] = 1;
+                continue;
+            }
+        }
+
+        const valid = mark.findIndex((u) => u === 0) === -1;
+        if (!valid) {
+            continue;
         }
         
-        if (valid) return originalArray;
+        const res = nums.filter((_, i) => mark[i] === 1).map((u) => u + Math.floor(k / 2));
+        return res;
     }
     
     return [];

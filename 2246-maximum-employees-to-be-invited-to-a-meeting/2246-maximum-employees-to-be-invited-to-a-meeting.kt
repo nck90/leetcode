@@ -1,6 +1,6 @@
 class Solution {
     fun maximumInvitations(favorite: IntArray): Int {
-        return maxOf(findMaxCycle(favorite), topologicalSort(favorite))
+        return maxOf(findMaxCycle(favorite), handleMutualPairs(favorite))
     }
 
     private fun findMaxCycle(favorites: IntArray): Int {
@@ -10,32 +10,34 @@ class Solution {
 
         for (startNode in 0 until n) {
             if (visited[startNode]) continue
-            val cycle = mutableListOf<Int>()
+            val cycleIndex = mutableMapOf<Int, Int>()
             var currentNode = startNode
+            var step = 0
 
             while (!visited[currentNode]) {
-                cycle.add(currentNode)
                 visited[currentNode] = true
+                cycleIndex[currentNode] = step++
                 currentNode = favorites[currentNode]
             }
 
-            for (k in cycle.indices) {
-                if (cycle[k] == currentNode) {
-                    maxCycleSize = maxOf(maxCycleSize, cycle.size - k)
-                    break
-                }
+            if (cycleIndex.contains(currentNode)) {
+                val cycleStart = cycleIndex[currentNode]!!
+                val cycleLength = step - cycleStart
+                maxCycleSize = maxOf(maxCycleSize, cycleLength)
             }
         }
+
         return maxCycleSize
     }
 
-    private fun topologicalSort(favorites: IntArray): Int {
+    private fun handleMutualPairs(favorites: IntArray): Int {
         val n = favorites.size
         val inDegree = IntArray(n)
-        val distance = IntArray(n) { 1 }
+        val distance = IntArray(n)
+        val visited = BooleanArray(n)
 
-        for (favorite in favorites) {
-            inDegree[favorite]++
+        for (i in favorites.indices) {
+            inDegree[favorites[i]]++
         }
 
         val queue = ArrayDeque<Int>()
@@ -54,12 +56,14 @@ class Solution {
             }
         }
 
-        var answer = 0
+        var totalPairChainLength = 0
+
         for (i in 0 until n) {
-            if (i == favorites[favorites[i]]) {
-                answer += distance[i]
+            if (i == favorites[favorites[i]] && i < favorites[i]) {
+                totalPairChainLength += distance[i] + distance[favorites[i]] + 2
             }
         }
-        return answer
+
+        return totalPairChainLength
     }
 }

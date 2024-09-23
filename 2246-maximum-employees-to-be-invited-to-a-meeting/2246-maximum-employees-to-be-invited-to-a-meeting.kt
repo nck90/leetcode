@@ -1,69 +1,64 @@
 class Solution {
     fun maximumInvitations(favorite: IntArray): Int {
-        return maxOf(findMaxCycle(favorite), handleMutualPairs(favorite))
-    }
+        val indegrees = IntArray(favorite.size)
 
-    private fun findMaxCycle(favorites: IntArray): Int {
-        val n = favorites.size
-        val visited = BooleanArray(n)
-        var maxCycleSize = 0
+        for (node in indegrees.indices) {
+            indegrees[favorite[node]] += 1
+        }
 
-        for (startNode in 0 until n) {
-            if (visited[startNode]) continue
-            val cycleIndex = mutableMapOf<Int, Int>()
-            var currentNode = startNode
-            var step = 0
+        val indegreeQueue = LinkedList<Int>()
+        val seenNodes = BooleanArray(indegrees.size)
 
-            while (!visited[currentNode]) {
-                visited[currentNode] = true
-                cycleIndex[currentNode] = step++
-                currentNode = favorites[currentNode]
-            }
-
-            if (cycleIndex.contains(currentNode)) {
-                val cycleStart = cycleIndex[currentNode]!!
-                val cycleLength = step - cycleStart
-                maxCycleSize = maxOf(maxCycleSize, cycleLength)
+        for (node in indegrees.indices) {
+            if (indegrees[node] == 0) {
+                indegreeQueue.offer(node)
+                seenNodes[node] = true
             }
         }
 
-        return maxCycleSize
-    }
+        val maxInComingNodes = IntArray(favorite.size)
 
-    private fun handleMutualPairs(favorites: IntArray): Int {
-        val n = favorites.size
-        val inDegree = IntArray(n)
-        val distance = IntArray(n)
-        val visited = BooleanArray(n)
+        while (indegreeQueue.isNotEmpty()) {
+            val currentNode = indegreeQueue.poll() ?: continue
+            val favNode = favorite[currentNode]
 
-        for (i in favorites.indices) {
-            inDegree[favorites[i]]++
-        }
+            maxInComingNodes[favNode] = maxOf(
+                maxInComingNodes[favNode],
+                1 + maxInComingNodes[currentNode]
+            )
 
-        val queue = ArrayDeque<Int>()
-        for (i in 0 until n) {
-            if (inDegree[i] == 0) {
-                queue.add(i)
+            if (seenNodes[favNode]) {
+                continue
+            }
+
+            indegrees[favNode] -= 1
+
+            if (indegrees[favNode] == 0) {
+                indegreeQueue.offer(favNode)
+                seenNodes[favNode] = true
             }
         }
 
-        while (queue.isNotEmpty()) {
-            val currentNode = queue.removeFirst()
-            val nextNode = favorites[currentNode]
-            distance[nextNode] = maxOf(distance[nextNode], distance[currentNode] + 1)
-            if (--inDegree[nextNode] == 0) {
-                queue.add(nextNode)
+        var result = 0
+        var result2 = 0
+
+        for (node in seenNodes.indices) {
+            var currentNode = node
+            var len = 0
+
+            while (!seenNodes[currentNode]) {
+                seenNodes[currentNode] = true
+                currentNode = favorite[currentNode]
+                len++
+            }
+
+            if (len == 2) {
+                result2 += 2 + maxInComingNodes[favorite[node]] + maxInComingNodes[node]
+            } else {
+                result = maxOf(result, len)
             }
         }
 
-        var totalPairChainLength = 0
-
-        for (i in 0 until n) {
-            if (i == favorites[favorites[i]] && i < favorites[i]) {
-                totalPairChainLength += distance[i] + distance[favorites[i]] + 2
-            }
-        }
-
-        return totalPairChainLength
+        return maxOf(result, result2)
     }
 }

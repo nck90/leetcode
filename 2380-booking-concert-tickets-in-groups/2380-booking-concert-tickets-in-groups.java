@@ -1,79 +1,114 @@
 class BookMyShow {
-    private int n, m;
-    private long[] seats;
-    private long[] maxTree;
-    private long[] sumTree;
+    private IntervalTree tree;
 
     public BookMyShow(int n, int m) {
-        this.n = n;
-        this.m = m;
-        this.seats = new long[n];
-        this.maxTree = new long[4 * n];
-        this.sumTree = new long[4 * n];
-        for (int i = 0; i < n; i++) seats[i] = m;
-        build(0, 0, n - 1);
-    }
-
-    private void build(int node, int start, int end) {
-        if (start == end) {
-            maxTree[node] = seats[start];
-            sumTree[node] = seats[start];
-        } else {
-            int mid = (start + end) / 2;
-            build(2 * node + 1, start, mid);
-            build(2 * node + 2, mid + 1, end);
-            maxTree[node] = Math.max(maxTree[2 * node + 1], maxTree[2 * node + 2]);
-            sumTree[node] = sumTree[2 * node + 1] + sumTree[2 * node + 2];
-        }
-    }
-
-    private void update(int node, int start, int end, int idx, int value) {
-        if (start == end) {
-            seats[start] -= value;
-            maxTree[node] = seats[start];
-            sumTree[node] = seats[start];
-        } else {
-            int mid = (start + end) / 2;
-            if (idx <= mid) update(2 * node + 1, start, mid, idx, value);
-            else update(2 * node + 2, mid + 1, end, idx, value);
-            maxTree[node] = Math.max(maxTree[2 * node + 1], maxTree[2 * node + 2]);
-            sumTree[node] = sumTree[2 * node + 1] + sumTree[2 * node + 2];
-        }
-    }
-
-    private int queryMax(int node, int start, int end, int maxRow, int k) {
-        if (start > maxRow || maxTree[node] < k) return -1;
-        if (start == end) return start;
-        int mid = (start + end) / 2;
-        int left = queryMax(2 * node + 1, start, mid, maxRow, k);
-        return left != -1 ? left : queryMax(2 * node + 2, mid + 1, end, maxRow, k);
-    }
-
-    private long querySum(int node, int start, int end, int l, int r) {
-        if (start > r || end < l) return 0;
-        if (start >= l && end <= r) return sumTree[node];
-        int mid = (start + end) / 2;
-        return querySum(2 * node + 1, start, mid, l, r) + querySum(2 * node + 2, mid + 1, end, l, r);
+        tree = new IntervalTree(n - 1, m);
     }
 
     public int[] gather(int k, int maxRow) {
-        int row = queryMax(0, 0, n - 1, maxRow, k);
-        if (row == -1) return new int[]{};
-        int startSeat = (int)(m - seats[row]);
-        update(0, 0, n - 1, row, k);
-        return new int[]{row, startSeat};
+        return tree.BookGather(k, maxRow);
     }
 
     public boolean scatter(int k, int maxRow) {
-        long availableSeats = querySum(0, 0, n - 1, 0, maxRow);
-        if (availableSeats < k) return false;
-        for (int r = 0; r <= maxRow && k > 0; r++) {
-            if (seats[r] > 0) {
-                int seatsToAllocate = (int)Math.min(k, seats[r]);
-                update(0, 0, n - 1, r, seatsToAllocate);
-                k -= seatsToAllocate;
+        return tree.BookScatter(k, maxRow);
+    }
+}
+
+
+class IntervalTreeNode {
+    private int start;
+    private int end;
+    private int mid;
+    private int capacity;
+    private int max;
+    private long total;
+    private IntervalTreeNode left;
+    private IntervalTreeNode right;
+
+    public IntervalTreeNode(int start, int end, int capacity) {
+        this.start = start;
+        this.end = end;
+        this.mid = (start + end) / 2;
+        this.capacity = capacity;
+        this.max = capacity;
+        this.total = (end - start + 1) * (long)capacity;
+
+        if (start != end) {
+            this.left = new IntervalTreeNode(start, mid, capacity);
+            this.right = new IntervalTreeNode(mid + 1, end, capacity);
+        }
+    }
+
+    public int[] BookGather(int number, int maxRow) {
+        if (start != end) {
+            int[] res = new int[0];
+
+            if (this.left.max >= number) {
+                res = this.left.BookGather(number, maxRow);
+            } else if (maxRow >= mid + 1 && this.right.max >= number) {
+                res = this.right.BookGather(number, maxRow);
+            }
+
+            if (res.length > 0) {
+                this.total = left.total + right.total;
+                this.max = Math.max(this.left.max, this.right.max);
+            }
+
+            return res;
+        } else {
+            if (this.total >= number) {
+                int[] booking = new int[]{start, capacity - max};
+                this.max -= number;
+                this.total -= number;
+                return booking;
+            } else {
+                return new int[0];
             }
         }
-        return true;
+    }
+
+    public long CheckScatter(int maxRow) {
+        if (start == end || maxRow == end) {
+            return total;
+        } else {
+            if (maxRow <= mid) {
+                return left.CheckScatter(maxRow);
+            }
+            return left.total + right.CheckScatter(maxRow);
+        }
+    }
+
+    public void BookScatter(long number) {
+        if (start != end) {
+            if (this.left.total < number) {
+                this.right.BookScatter(number - this.left.total);
+            }
+            this.left.BookScatter(Math.min(this.left.total, number));
+            this.max = Math.max(left.max, right.max);
+            this.total = left.total + right.total;
+        } else {
+            this.total -= number;
+            this.max -= number;
+        }
+    }
+}
+
+class IntervalTree {
+    private IntervalTreeNode root;
+
+    public IntervalTree(int end, int capacity) {
+        root = new IntervalTreeNode(0, end, capacity);
+    }
+
+    public int[] BookGather(int number, int maxRow) {
+        return root.BookGather(number, maxRow);
+    }
+
+    public boolean BookScatter(int number, int maxRow) {
+        if (root.CheckScatter(maxRow) >= number) {
+            root.BookScatter(number);
+            return true;
+        }
+        return false;
     }
 }

@@ -8,15 +8,18 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 | ------- |
 | [2241-recover-the-original-array](https://github.com/nck90/leetcode/tree/master/2241-recover-the-original-array) |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
+| [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
 ## Hash Table
 |  |
 | ------- |
 | [2241-recover-the-original-array](https://github.com/nck90/leetcode/tree/master/2241-recover-the-original-array) |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
+| [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
 ## String
 |  |
 | ------- |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
+| [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
 ## Dynamic Programming
 |  |
 | ------- |
@@ -25,6 +28,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 |  |
 | ------- |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
+| [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
 ## Binary Search
 |  |
 | ------- |

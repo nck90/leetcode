@@ -1,64 +1,44 @@
 class Solution {
-    private class TrieNode {
-        TrieNode[] children = new TrieNode[10];
-        boolean hasArr1 = false;
-        boolean hasArr2 = false;
+    private class Trie {
+        Trie[] children = new Trie[10];
     }
 
     public int longestCommonPrefix(int[] arr1, int[] arr2) {
-        TrieNode root = new TrieNode();
-        for (int num : arr1) {
-            TrieNode node = root;
-            int n = num;
-            int mult = 1;
-            while (n / mult >= 10) {
-                mult *= 10;
-            }
-            while (mult > 0) {
-                int digit = n / mult;
-                n %= mult;
-                if (node.children[digit] == null) {
-                    node.children[digit] = new TrieNode();
-                }
-                node = node.children[digit];
-                node.hasArr1 = true;
-                mult /= 10;
+        Trie root = new Trie();
+        for (int n : arr1) {
+            int multi = multi(n);
+            Trie parent = root;
+            while (multi > 0) {
+                int d = (n / multi) % 10;
+                if (parent.children[d] == null) parent.children[d] = new Trie();
+                parent = parent.children[d];
+                multi /= 10;
             }
         }
 
-        for (int num : arr2) {
-            TrieNode node = root;
-            int n = num;
-            int mult = 1;
-            while (n / mult >= 10) {
-                mult *= 10;
-            }
-            while (mult > 0) {
-                int digit = n / mult;
-                n %= mult;
-                if (node.children[digit] == null) {
-                    node.children[digit] = new TrieNode();
-                }
-                node = node.children[digit];
-                node.hasArr2 = true;
-                mult /= 10;
+        int maxLen = 0;
+        for (int n : arr2) {
+            int multi = multi(n);
+            int len = 0;
+            Trie parent = root;
+            while (multi > 0) {
+                int d = (n / multi) % 10;
+                if (parent.children[d] == null) break;
+                parent = parent.children[d];
+                len++;
+                maxLen = Math.max(maxLen, len);
+                multi /= 10;
             }
         }
 
-        return dfs(root, 0);
+        return maxLen;
     }
 
-    private int dfs(TrieNode node, int depth) {
-        if (node == null) return 0;
-        int maxDepth = 0;
-        if (node.hasArr1 && node.hasArr2) {
-            maxDepth = depth;
+    private int multi(int n) {
+        int mult = 1;
+        while (mult * 10 <= n) {
+            mult *= 10;
         }
-        for (TrieNode child : node.children) {
-            if (child != null) {
-                maxDepth = Math.max(maxDepth, dfs(child, depth + 1));
-            }
-        }
-        return maxDepth;
+        return mult;
     }
 }

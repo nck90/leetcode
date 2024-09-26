@@ -74,5 +74,14 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 ## Recursion
 |  |
 | ------- |
+| [0002-add-two-numbers](https://github.com/nck90/leetcode/tree/master/0002-add-two-numbers) |
 | [0010-regular-expression-matching](https://github.com/nck90/leetcode/tree/master/0010-regular-expression-matching) |
+## Linked List
+|  |
+| ------- |
+| [0002-add-two-numbers](https://github.com/nck90/leetcode/tree/master/0002-add-two-numbers) |
+## Math
+|  |
+| ------- |
+| [0002-add-two-numbers](https://github.com/nck90/leetcode/tree/master/0002-add-two-numbers) |
 <!---LeetCode Topics End-->

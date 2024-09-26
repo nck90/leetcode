@@ -6,6 +6,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 ## Array
 |  |
 | ------- |
+| [0004-median-of-two-sorted-arrays](https://github.com/nck90/leetcode/tree/master/0004-median-of-two-sorted-arrays) |
 | [2241-recover-the-original-array](https://github.com/nck90/leetcode/tree/master/2241-recover-the-original-array) |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
 | [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
@@ -36,6 +37,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 ## Binary Search
 |  |
 | ------- |
+| [0004-median-of-two-sorted-arrays](https://github.com/nck90/leetcode/tree/master/0004-median-of-two-sorted-arrays) |
 | [2380-booking-concert-tickets-in-groups](https://github.com/nck90/leetcode/tree/master/2380-booking-concert-tickets-in-groups) |
 ## Design
 |  |
@@ -90,4 +92,8 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 |  |
 | ------- |
 | [0003-longest-substring-without-repeating-characters](https://github.com/nck90/leetcode/tree/master/0003-longest-substring-without-repeating-characters) |
+## Divide and Conquer
+|  |
+| ------- |
+| [0004-median-of-two-sorted-arrays](https://github.com/nck90/leetcode/tree/master/0004-median-of-two-sorted-arrays) |
 <!---LeetCode Topics End-->

@@ -14,6 +14,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 |  |
 | ------- |
 | [0003-longest-substring-without-repeating-characters](https://github.com/nck90/leetcode/tree/master/0003-longest-substring-without-repeating-characters) |
+| [0432-all-oone-data-structure](https://github.com/nck90/leetcode/tree/master/0432-all-oone-data-structure) |
 | [2241-recover-the-original-array](https://github.com/nck90/leetcode/tree/master/2241-recover-the-original-array) |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
 | [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
@@ -45,6 +46,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 ## Design
 |  |
 | ------- |
+| [0432-all-oone-data-structure](https://github.com/nck90/leetcode/tree/master/0432-all-oone-data-structure) |
 | [2380-booking-concert-tickets-in-groups](https://github.com/nck90/leetcode/tree/master/2380-booking-concert-tickets-in-groups) |
 ## Binary Indexed Tree
 |  |
@@ -88,6 +90,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 |  |
 | ------- |
 | [0002-add-two-numbers](https://github.com/nck90/leetcode/tree/master/0002-add-two-numbers) |
+| [0432-all-oone-data-structure](https://github.com/nck90/leetcode/tree/master/0432-all-oone-data-structure) |
 ## Math
 |  |
 | ------- |
@@ -102,4 +105,8 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 |  |
 | ------- |
 | [0004-median-of-two-sorted-arrays](https://github.com/nck90/leetcode/tree/master/0004-median-of-two-sorted-arrays) |
+## Doubly-Linked List
+|  |
+| ------- |
+| [0432-all-oone-data-structure](https://github.com/nck90/leetcode/tree/master/0432-all-oone-data-structure) |
 <!---LeetCode Topics End-->

@@ -26,6 +26,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 | [0006-zigzag-conversion](https://github.com/nck90/leetcode/tree/master/0006-zigzag-conversion) |
 | [0010-regular-expression-matching](https://github.com/nck90/leetcode/tree/master/0010-regular-expression-matching) |
 | [2755-extra-characters-in-a-string](https://github.com/nck90/leetcode/tree/master/2755-extra-characters-in-a-string) |
+| [3195-separate-black-and-white-balls](https://github.com/nck90/leetcode/tree/master/3195-separate-black-and-white-balls) |
 | [3329-find-the-length-of-the-longest-common-prefix](https://github.com/nck90/leetcode/tree/master/3329-find-the-length-of-the-longest-common-prefix) |
 ## Dynamic Programming
 |  |
@@ -61,6 +62,7 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 | ------- |
 | [0005-longest-palindromic-substring](https://github.com/nck90/leetcode/tree/master/0005-longest-palindromic-substring) |
 | [2241-recover-the-original-array](https://github.com/nck90/leetcode/tree/master/2241-recover-the-original-array) |
+| [3195-separate-black-and-white-balls](https://github.com/nck90/leetcode/tree/master/3195-separate-black-and-white-balls) |
 ## Sorting
 |  |
 | ------- |
@@ -109,4 +111,8 @@ Collection of LeetCode questions to ace the coding interview! - Created using [L
 |  |
 | ------- |
 | [0432-all-oone-data-structure](https://github.com/nck90/leetcode/tree/master/0432-all-oone-data-structure) |
+## Greedy
+|  |
+| ------- |
+| [3195-separate-black-and-white-balls](https://github.com/nck90/leetcode/tree/master/3195-separate-black-and-white-balls) |
 <!---LeetCode Topics End-->
